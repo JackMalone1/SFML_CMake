@@ -12,6 +12,7 @@ set(BUILD_SHARED_LIBS FALSE)
 
 #Adds a subdirectory to the build.
 add_subdirectory(libs/sfml)
+add_subdirectory(libs/entt)
 
 # File manipulation command. (Automatically checks and finds all source files at build time)
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "src/*.cpp")

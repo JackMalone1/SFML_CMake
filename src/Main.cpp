@@ -1,24 +1,55 @@
-#include <SFML/Graphics.hpp>
+#include "Game.h"
 
+struct position {
+    float x;
+    float y;
+};
+
+struct velocity {
+    float dx;
+    float dy;
+};
+
+void update(entt::registry& registry) {
+    auto view = registry.view<const position, velocity>();
+
+    // use a callback
+    view.each([](const auto& pos, auto& vel) { /* ... */ });
+
+    // use an extended callback
+    view.each([](const auto entity, const auto& pos, auto& vel) { /* ... */ });
+
+    // use a range-for
+    for (auto [entity, pos, vel] : view.each()) {
+        // ...
+    }
+
+    // use forward iterators and get only the components of interest
+    for (auto entity : view) {
+        auto& vel = view.get<velocity>(entity);
+        // ...
+    }
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <returns></returns>
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    entt::registry registry;
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+    for (auto i = 0u; i < 10u; ++i) {
+        const auto entity = registry.create();
+        registry.emplace<position>(entity, i * 1.f, i * 1.f);
+        if (i % 2 == 0) { registry.emplace<velocity>(entity, i * .1f, i * .1f); }
     }
+
+    update(registry);
+
+    Game game;
+    game.run();
 
     return 0;
 }
