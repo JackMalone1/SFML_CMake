@@ -1,44 +1,42 @@
-/// <summary>
-/// author Pete Lowe May 2019
-/// you need to change the above line or lose marks
-/// </summary>
 #ifndef GAME_HPP
 #define GAME_HPP
-/// <summary>
-/// include guards used so we don't process this file twice
-/// same as #pragma once
-/// Don't forget the endif at the bottom
-/// </summary>
+
 #include <SFML/Graphics.hpp>
 #include "entt.hpp"
+#include "Components.h"
+#include "Lua.hpp"
+#include "Entity.h"
+#include "Globals.h"
+#include <LuaBridge.h>
+
+struct MovementDirections
+{
+	bool moveUp = false;
+	bool moveDown = false;
+	bool moveLeft = false;
+	bool moveRight = false;
+};
 
 class Game
 {
 public:
 	Game();
 	~Game();
-	/// <summary>
-	/// main method for game
-	/// </summary>
 	void run();
-
 private:
-
 	void processEvents();
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
-
-	void setupFontAndText();
-	void setupSprite();
-
+	void printMessage(const std::string& s);
+private:
 	sf::RenderWindow m_window; // main SFML window
-	sf::Font m_ArialBlackfont; // font used by message
-	sf::Text m_welcomeMessage; // text used for message on screen
-	sf::Texture m_logoTexture; // texture used for sfml logo
-	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
-
+	MovementDirections directions;
+	lua_State* L;
+	sf::Text m_text;
+	sf::Font m_font;
+	Entity _player;
 };
 
 #endif // !GAME_HPP
